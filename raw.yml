@@ -1,0 +1,7 @@
+---
+- hosts: test
+  tasks:
+
+  - name: Update & safe-upgrade
+    raw: aptitude update && aptitude safe-upgrade -y
+    sudo: yes
