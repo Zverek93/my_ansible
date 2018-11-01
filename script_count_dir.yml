@@ -1,0 +1,7 @@
+---
+- hosts: test
+  tasks:
+
+  - name: Count directories in /var/log
+    script: /etc/ansible/playbooks/scripts/count_dir.sh /var/log
+    sudo: yes
