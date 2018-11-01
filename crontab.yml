@@ -1,0 +1,24 @@
+#Для управления планировщиком задач используется модуль cron. Может принимать следующие параметры:
+
+#backup — создает резервную перед изменением;
+#cron_file — использует указанный файл из каталога cron.d вместо пользовательского crontab;
+#day — день запуска задачи (1-31, *, */2);
+#hour — час запуска задачи (0-23, *, */2);
+#minute — минута запуска задачи (0-59, *, */2);
+#month — месяц запуска задачи (1-12, *, */2);
+#weekday — неделя запуска задачи (0-6 for Sunday-Saturday, *);
+#disabled — закомментировать ранее добавленную задачу;
+#job — задача;
+#name — описание задачи в crontab (комментарий);
+#state — существует ли такая задача(принимает значения present и absent);
+#user — пользователь, в чей crontab следует добавить задачу;
+#special_time — специальное время запуска задачи (reboot, yearly, annually, monthly, weekly, daily и hourly).
+#Пример playbook с использованием модуля cron:
+
+---
+- hosts: test
+  tasks:
+
+  - name: Add task to cron
+    cron: name="check speedtest" minute="0" hour="1,10" job="/usr/local/bin/speedtest.sh"
+    sudo: yes
