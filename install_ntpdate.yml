@@ -1,0 +1,18 @@
+---
+- hosts: test
+  tasks:
+
+  - name: Check if ntpdate is installed
+    command: dpkg-query -W ntpdate
+    register: ntpdate_check_deb
+    failed_when: ntpdate_check_deb.rc > 1
+    changed_when: ntpdate_check_deb.rc == 1
+
+  - name: Install ntpdate
+    apt: name=ntpdate update_cache=yes
+    sudo: yes
+    when: ntpdate_check_deb.rc == 1
+
+  - name: Sync date
+    command: ntpdate -u 192.168.0.13
+    sudo: yes
