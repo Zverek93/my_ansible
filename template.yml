@@ -1,0 +1,12 @@
+#Модуль template используется в Ansible для создания файлов по определенным шаблонам (например, конфигов) на удаленных хостах. Чтобы проверить работу данного модуля, создадим простенький шаблон /etc/ansible/playbooks/templates/hostname/ с таким содержимым:
+
+#This is test file on {{ ansible_hostname }}
+#Playbook с использованием модуля template получится такой:
+
+---
+- hosts: test
+  tasks:
+
+  - name: Create template with hostname
+    template: src=/etc/ansible/playbooks/templates/hostname dest=/home/admin/testfile mode=0644
+    sudo: yes
