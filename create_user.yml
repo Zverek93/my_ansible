@@ -1,0 +1,10 @@
+#Создать несколько пользователей к группе 
+---
+- hosts: test
+  tasks:
+   - name: Add test users
+     user: name={{ item.name }} state=present groups={{ item.groups }}
+     with_items:
+      - { name: 'user1', groups: 'adm'  }
+      - { name: 'user2', groups: 'lpadmin' }
+     sudo: yes
