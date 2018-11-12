@@ -1,0 +1,45 @@
+- hosts: all
+  user: root
+ 
+  tasks:
+    - name: Add user
+      action: user name=korp password=XXX groups=wheel
+ 
+    - name: Add EPEL repo
+      yum: name=http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm
+ 
+    - name: Add RPMForge repo
+      yum: name=http://apt.sw.be/redhat/el7/en/x86_64/rpmforge/RPMS/rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm
+ 
+    - name: Add Remi repo
+      yum: name=http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+       
+    - name: Software install
+      yum: name={{item}} state=latest
+      with_items:
+        - yum-priorities 
+        - htop 
+        - mc 
+        - nano 
+        - ntsysv 
+        - wget 
+        - vim 
+        - ntpdate 
+        - openssh-clients 
+        - yum-utils 
+        - yum-remove-with-leaves
+         
+    - name: NTP daemon enable
+      service: name=ntpdate enabled=yes
+       
+    - name: Setup NTP daemon
+      template: src=ntpdate.j2 dest=/etc/ntp.conf owner=root group=root mode=0644
+       
+    - name: NTP daemon restart
+      service: name=ntpdate state=restarted
+       
+    - name: Disable SELinux 
+      selinux: state=disabled
+       
+    - name: PermitRootLoginSSH
+      lineinfile: dest=/etc/ssh/sshd_config regexp="^MaxSessions 10" insertafter="^#MaxSessions 10" line="PermitRootLogin no"
