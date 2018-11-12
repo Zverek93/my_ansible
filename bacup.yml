@@ -1,0 +1,52 @@
+---
+- hosts: all
+  user: korp
+  sudo: yes
+   
+  vars:
+    DESTINATION: /mnt/nas/config/{{ansible_date_time.date}}
+  
+  tasks:
+    - name: Copy Server.properties
+      fetch: src=/home/korp/AirVideoServerHD/Server.properties dest={{ DESTINATION }}
+      when: ansible_hostname == 'airvideoserverhd'
+       
+    - name: Copy httpd.conf
+      fetch: src=/etc/httpd/conf/httpd.conf dest={{ DESTINATION }}
+      when: ansible_hostname == 'apache'
+       
+    - name: Copy dhcpd.conf
+      fetch: src=/etc/dhcp/dhcpd.conf dest={{ DESTINATION }}
+      when: ansible_hostname == 'dhcp'
+       
+    - name: Copy named.conf
+      fetch: src=/etc/named.conf dest={{ DESTINATION }}
+      when: ansible_hostname == 'dns'
+       
+    - name: Copy korphome.local.zone
+      fetch: src=/var/named/korphome.local.zone dest={{ DESTINATION }}
+      when: ansible_hostname == 'dns'
+       
+    - name: Copy 1.168.192.in-addr.arpa.zone
+      fetch: src=/var/named/1.168.192.in-addr.arpa.zone dest={{ DESTINATION }}
+      when: ansible_hostname == 'dns'
+       
+    - name: Copy nginx.conf
+      fetch: src=/etc/nginx/nginx.conf dest={{ DESTINATION }}
+      when: ansible_hostname == 'nginx'
+ 
+    - name: Copy php.ini
+      fetch: src=/etc/php.ini dest={{ DESTINATION }}
+      when: ansible_hostname == 'nginx'
+       
+    - name: Copy owncloud.conf
+      fetch: src=/etc/httpd/conf.d/owncloud.conf dest={{ DESTINATION }}
+      when: ansible_hostname == 'owncloud'
+       
+    - name: Copy firewall.sh
+      fetch: src=/root/firewall.sh dest={{ DESTINATION }}
+      when: ansible_hostname == 'router'
+       
+    - name: Copy server.conf
+      fetch: src=/etc/openvpn/server.conf dest={{ DESTINATION }}
+      when: ansible_hostname == 'router'
