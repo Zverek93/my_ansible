@@ -1,0 +1,9 @@
+Пример плейбука для распространения вашего ssh pub-key на серверы:
+# file: keys.yml
+---
+- hosts: app-servers
+  tasks:
+  - name: Set up authorized_keys for the backup user # Всегда указывайте подробные имена для тасков, так будет вам проще читать вывод и понятнее для коллег что вы хотите здесь сделать.
+    authorized_key: user=backup key="{{ item }}"
+    with_file:
+    - keys/backup.pub
