@@ -1,0 +1,10 @@
+[root@ansible ansible]# vim /etc/ansible/roles/nginx/handlers/main.yml
+---
+- name: restart nginx
+  service: name=nginx state=restarted enabled=yes
+ 
+Пример
+
+- name: Copy index.html
+  template: src=index.html dest=/srv/{{ server_name}}/index.html
+  notify: restart nginx
