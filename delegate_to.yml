@@ -1,0 +1,8 @@
+Делегирование задачи другому хосту
+Иногда требуется выполнить задачу на определённом узле, но в контексте другого узла. Например, во время обновления узла может возникнуть необходимость отключить для него мониторинг, находящийся на отдельном сервере. Для этого используется управляющая директива delegate_to. Приведём пример:
+
+- name: disable nagios alerts for this host webserver service
+  nagios: action=disable_alerts host={{inventory_hostname}} services=dnsserver
+  delegate_to: mon_host.example.com
+  
+Результатом выполнения этой задачи будет отключение сообщений для сервиса dnsserver в Nagios.
