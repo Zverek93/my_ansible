@@ -1,0 +1,33 @@
+---
+- hosts: web
+  remote_user: kamaok
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: "Install Apache, MySQL, PHP5"
+      apt: name={{ item }} state=present
+      with_items:
+        - apache2
+        - mysql-server
+        - python-mysqldb
+        - php5
+        - php-pear
+        - php5-mysql
+ 
+    - name: "Turn on Apache and MySQL and set them to run on boot"
+      service: name={{ item }} state=started enabled=yes
+      with_items:
+        - apache2
+        - mysql
+ 
+    - name: Create a test database
+      mysql_db: name=mytestdb
+                state=present
+ 
+    - name: Create a new user for connections
+      mysql_user: name=mytestuser
+                  password=mysqlpassword
+                  priv=*.*:ALL host=localhost state=present 
+ 
+    - name: Install Hello World PHP script
+      copy: src=index.php dest=/var/www/html/index.php mode=0664
