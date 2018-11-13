@@ -1,0 +1,17 @@
+Собственно, ad-hoc режим довольная полезная вещь. Однако, большинство задач подразумевает под собой выполнение какой-то цепочки действий. Для этого мы будем использовать так называемые playbooks, описываемые в YAML. Давайте напишем playbook, который решит поставленную проблему.
+
+- name: Setup supervision support
+  hosts: all
+  tasks:
+    - name: install libselinux-python
+      yum: name=libselinux-python state=present
+      sudo: yes
+
+    - name: add user itm to system
+      user: name=supervision shell=/bin/bash home=/home/supervision
+      sudo: yes
+
+    - name: add authorized key  
+      authorized_key: user=supervision key="{{ lookup('file', '/Users/dlysenko/.ssh/supervision.pub') }}"
+      sudo: yes
+      sudo_user: supervision
