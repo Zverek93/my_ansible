@@ -1,0 +1,19 @@
+2.Создание playbook, который создает пользователя с привилегиями root-пользователя через sudo, добавит SSH-ключ для этого пользователя
+
+---
+- hosts: web
+  remote_user: root
+  vars:
+    MY_USER_NAME: 'kamaok'
+  tasks:
+    - name: "Create a secondary, non-root user"
+      user: name={{ MY_USER_NAME }}
+            password='$6$rounds=656000$6G5H7yesfp8FCM5o$HcCpYm3PR5wirg13F92LB5QfCzjTXvXg2Y1Ex8lkQlrJ72P2AsQnj5xHJXw.aB.6mXL2hbLaYK7M/SR92FcNO0'
+            shell=/bin/bash
+    - name: Add remote authorized key to allow future passwordless logins
+      authorized_key: user={{ MY_USER_NAME }} key="{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+    - name: Add normal user to sudoers
+      lineinfile: dest=/etc/sudoers
+                  regexp="{{ MY_USER_NAME }} ALL"
+                  line="{{ MY_USER_NAME }} ALL=(ALL) ALL"
+                  state=present
